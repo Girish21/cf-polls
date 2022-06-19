@@ -1,10 +1,18 @@
-import { Form, useActionData } from '@remix-run/react'
+import { Form, useActionData, useSearchParams } from '@remix-run/react'
+import * as React from 'react'
 import { clsx } from '~/utils'
 
 export function AuthForm() {
+  let [searchparams] = useSearchParams()
   let actionData = useActionData<{ error: string } | undefined>()
+  let inputRef = React.useRef<HTMLInputElement>(null)
 
   let error = actionData && actionData.error
+  let defaultUserName = searchparams.get('userName') || ''
+
+  React.useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   return (
     <Form method='post'>
@@ -16,6 +24,7 @@ export function AuthForm() {
           User Name
         </label>
         <input
+          ref={inputRef}
           id='user-name'
           name='userName'
           className={clsx(
@@ -23,6 +32,7 @@ export function AuthForm() {
             error && 'border-b-red-500',
           )}
           autoComplete='off'
+          defaultValue={defaultUserName}
           required
           {...(error && { 'aria-describedby': 'user-name-error' })}
         />
