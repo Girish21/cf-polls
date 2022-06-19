@@ -39,7 +39,10 @@ export default function App() {
   // let loaderData = useLoaderData<LoaderData>()
 
   return (
-    <html lang='en' className='h-full dark:bg-slate-800'>
+    <html
+      lang='en'
+      className='h-full bg-gradient-to-r from-blue-200 to-white dark:from-slate-900 dark:to-slate-700'
+    >
       <head>
         <Meta />
         <Links />
