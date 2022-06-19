@@ -1,2 +1,2 @@
 export { default } from '@/signup/signup.component'
-export { action } from '@/signup/signup.server'
+export { action, loader } from '@/signup/signup.server'
