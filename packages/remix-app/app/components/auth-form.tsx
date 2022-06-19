@@ -16,7 +16,7 @@ export function AuthForm() {
 
   return (
     <Form method='post'>
-      <fieldset className='flex w-[min(45ch,100vw-2rem)] flex-col gap-4'>
+      <fieldset className='flex w-[min(45ch,100vw-2rem)] flex-col gap-1'>
         <label
           htmlFor='user-name'
           className='block text-lg text-gray-900 dark:text-slate-100'
