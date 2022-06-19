@@ -11,40 +11,41 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
+  // useLoaderData,
 } from '@remix-run/react'
 import styles from '~/styles/app.css'
+import { getUser } from './session/user.server'
 
 export let meta: MetaFunction = () => ({
   charset: 'utf-8',
-  title: 'New Remix App',
+  title: 'Polls',
   viewport: 'width=device-width,initial-scale=1',
   'color-scheme': 'dark light',
 })
 
 export let links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
-export let loader: LoaderFunction = async ({ context }) => {
-  let id = context.env.COUNTER.idFromName('root')
-  let object = context.env.COUNTER.get(id)
-  let doResponse = await object.fetch('https://../increment')
-  let count = Number(await doResponse.text())
+export let loader: LoaderFunction = async ({ request, context }) => {
+  let userData = await getUser(request, context.env)
 
-  return json<LoaderData>({ count })
+  if (!userData) {
+    return json(null)
+  }
+
+  return json<LoaderData>({ userName: userData.name })
 }
 
 export default function App() {
-  let loaderData = useLoaderData<LoaderData>()
+  // let loaderData = useLoaderData<LoaderData>()
 
   return (
-    <html lang='en'>
+    <html lang='en' className='h-full dark:bg-slate-800'>
       <head>
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className='h-full'>
         <Outlet />
-        <p className='text-xl'>Invocatoins: {loaderData.count}</p>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
@@ -54,5 +55,5 @@ export default function App() {
 }
 
 type LoaderData = {
-  count: number
-}
+  userName: string
+} | null
