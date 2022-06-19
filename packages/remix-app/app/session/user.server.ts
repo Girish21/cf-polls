@@ -64,7 +64,7 @@ export async function getUserOrRedirect(request: Request, env: Env) {
   return userData
 }
 
-export async function getUserSessionIfNotExist(request: Request, env: Env) {
+export async function getUserSessionOrRedirect(request: Request, env: Env) {
   let session = await getSession(request, env)
   let userName = session.get('userName')
 

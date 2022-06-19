@@ -4,7 +4,7 @@ import * as z from 'zod'
 import {
   commitSession,
   getSession,
-  getUserSessionIfNotExist,
+  getUserSessionOrRedirect,
 } from '~/session/user.server'
 import { validateName } from '~/utils'
 
@@ -43,7 +43,7 @@ export let action: ActionFunction = async ({ context, request }) => {
 }
 
 export let loader: LoaderFunction = async ({ context, request }) => {
-  await getUserSessionIfNotExist(request, context.env)
+  await getUserSessionOrRedirect(request, context.env)
 
   return json(null)
 }
