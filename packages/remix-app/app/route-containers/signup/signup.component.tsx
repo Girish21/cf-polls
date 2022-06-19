@@ -1,8 +1,9 @@
-import { AuthForm, Link, P } from '~/components'
+import { AuthForm, AuthPageTitle, Link, P } from '~/components'
 
 export default function Signup() {
   return (
     <>
+      <AuthPageTitle>Signup</AuthPageTitle>
       <AuthForm />
       <P>
         Already have an account?{' '}
