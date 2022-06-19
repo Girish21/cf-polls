@@ -1,7 +1,8 @@
 interface Env {
   __STATIC_CONTENT: KVNamespace
 
-  COUNTER: DurableObjectNamespace
+  POLL: DurableObjectNamespace
+  USER: KVNamespace
 
   SESSION_SECRET: string
 }

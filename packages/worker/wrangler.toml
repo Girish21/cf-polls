@@ -1,15 +1,20 @@
-compatibility_date = "2022-05-22"
-main = "src/index.ts"
-name = "remix-cloudflare-template"
+compatibility_date = '2022-05-22'
+main = 'src/index.ts'
+name = 'polls'
+account_id = '8b97ccfb2affaf6aa5bb0094455d9ce3'
+
+kv_namespaces = [
+	{ binding = "USER", id = "18f988edca72481580c40c04f4c3da5a" }
+]
 
 [site]
-bucket = "../remix-app/public"
+bucket = '../remix-app/public'
 
 [durable_objects]
 bindings = [
-  {name = "COUNTER", class_name = "CounterDurableObject"},
+	{ name = 'POLL', class_name = 'PollDurableObject' },
 ]
 
 [[migrations]]
-tag = "v1"
-new_classes = ["CounterDurableObject"]
+tag = 'v1'
+new_classes = ['PollDurableObject']
