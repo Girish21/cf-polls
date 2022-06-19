@@ -1,7 +1,11 @@
-import type { ActionFunction } from '@remix-run/cloudflare'
+import type { ActionFunction, LoaderFunction } from '@remix-run/cloudflare'
 import { json, redirect } from '@remix-run/cloudflare'
 import * as z from 'zod'
-import { commitSession, getSession } from '~/session/user.server'
+import {
+  commitSession,
+  getSession,
+  getUserSessionIfNotExist,
+} from '~/session/user.server'
 import { validateName } from '~/utils'
 
 export let action: ActionFunction = async ({ context, request }) => {
@@ -15,9 +19,9 @@ export let action: ActionFunction = async ({ context, request }) => {
     name = validateName(formData.get('userName'))
   } catch (e) {
     if (e instanceof z.ZodError) {
-      return json<ActionData>({ error: e.issues.at(0)?.message })
+      return json<AuthActionData>({ error: e.issues.at(0)?.message })
     }
-    return json<ActionData>({ error: 'Unknown error' })
+    return json<AuthActionData>({ error: 'Unknown error' })
   }
 
   let kvUser = await context.env.USER.get(name)
@@ -38,4 +42,8 @@ export let action: ActionFunction = async ({ context, request }) => {
   })
 }
 
-type ActionData = { error: string | undefined } | null
+export let loader: LoaderFunction = async ({ context, request }) => {
+  await getUserSessionIfNotExist(request, context.env)
+
+  return json(null)
+}
