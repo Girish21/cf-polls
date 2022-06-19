@@ -18,7 +18,8 @@
     "@remix-run/cloudflare": "^1.6.0",
     "@remix-run/react": "^1.6.0",
     "react": "next",
-    "react-dom": "next"
+    "react-dom": "next",
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.10.0",
