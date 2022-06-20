@@ -2,15 +2,15 @@ import type { ActionFunction, LoaderFunction } from '@remix-run/cloudflare'
 import { json, redirect } from '@remix-run/cloudflare'
 import * as z from 'zod'
 import {
-  commitSession,
-  getSession,
+  commitUserSession,
+  getUserSession,
   getUserSessionOrRedirect,
 } from '~/session/user.server'
 import { validateName } from '~/utils'
 
 export let action: ActionFunction = async ({ context, request }) => {
   let [session, formData] = await Promise.all([
-    getSession(request, context.env),
+    getUserSession(request, context.env),
     request.formData(),
   ])
 
@@ -38,7 +38,7 @@ export let action: ActionFunction = async ({ context, request }) => {
   session.set('userName', name)
 
   return redirect('/', {
-    headers: { 'Set-Cookie': await commitSession(session, context.env) },
+    headers: { 'Set-Cookie': await commitUserSession(session, context.env) },
   })
 }
 

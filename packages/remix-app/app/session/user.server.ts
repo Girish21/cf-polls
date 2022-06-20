@@ -1,7 +1,7 @@
 import type { Session } from '@remix-run/cloudflare'
 import { createCookieSessionStorage, redirect } from '@remix-run/cloudflare'
 
-function getSessionCookie(env: Env) {
+function getUserSessionCookie(env: Env) {
   if (!env.SESSION_SECRET) {
     throw new Error('SESSION_SECRET is not set')
   }
@@ -18,11 +18,11 @@ function getSessionCookie(env: Env) {
   })
 }
 
-export async function getSession(
+export async function getUserSession(
   cookieOrRequest: Request | string | null,
   env: Env,
 ) {
-  let sessionCookie = getSessionCookie(env)
+  let sessionCookie = getUserSessionCookie(env)
   let cookie =
     typeof cookieOrRequest === 'string'
       ? cookieOrRequest
@@ -31,41 +31,51 @@ export async function getSession(
   return await sessionCookie.getSession(cookie)
 }
 
-export async function commitSession(session: Session, env: Env) {
-  let sessionCookie = getSessionCookie(env)
+export async function commitUserSession(session: Session, env: Env) {
+  let sessionCookie = getUserSessionCookie(env)
   return await sessionCookie.commitSession(session)
 }
 
-export async function getUser(request: Request, env: Env) {
-  let session = await getSession(request, env)
+export async function destroyUserSession(session: Session, env: Env) {
+  let sessionCookie = getUserSessionCookie(env)
+  return await sessionCookie.destroySession(session)
+}
+
+export async function getUser(
+  request: Request,
+  env: Env,
+): Promise<[Session, KVUserData | null]> {
+  let session = await getUserSession(request, env)
   let userName = session.get('userName')
 
   if (!userName) {
-    return null
+    return [session, null]
   }
 
   let user = await env.USER.get(userName)
   if (!user) {
-    return null
+    return [session, null]
   }
 
-  let userData = JSON.parse(user) as { name: string }
+  let userData = JSON.parse(user) as KVUserData
 
-  return userData
+  return [session, userData]
 }
 
 export async function getUserOrRedirect(request: Request, env: Env) {
-  let userData = await getUser(request, env)
+  let [session, userData] = await getUser(request, env)
 
   if (!userData) {
-    throw redirect('/login')
+    throw redirect('/login', {
+      headers: { 'Set-Cookie': await destroyUserSession(session, env) },
+    })
   }
 
   return userData
 }
 
 export async function getUserSessionOrRedirect(request: Request, env: Env) {
-  let session = await getSession(request, env)
+  let session = await getUserSession(request, env)
   let userName = session.get('userName')
 
   if (userName) {

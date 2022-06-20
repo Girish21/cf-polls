@@ -26,7 +26,7 @@ export let meta: MetaFunction = () => ({
 export let links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }]
 
 export let loader: LoaderFunction = async ({ request, context }) => {
-  let userData = await getUser(request, context.env)
+  let [, userData] = await getUser(request, context.env)
 
   if (!userData) {
     return json(null)
