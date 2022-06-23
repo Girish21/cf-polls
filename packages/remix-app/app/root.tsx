@@ -41,7 +41,7 @@ export default function App() {
   return (
     <html
       lang='en'
-      className='h-full bg-gradient-to-r from-blue-200 to-white dark:from-slate-900 dark:to-slate-700'
+      className='h-full bg-gradient-to-r from-blue-200 to-white dark:from-slate-900 dark:to-slate-800'
     >
       <head>
         <Meta />
